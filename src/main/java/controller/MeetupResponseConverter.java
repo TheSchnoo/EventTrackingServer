@@ -25,10 +25,14 @@ public class MeetupResponseConverter {
             String organizer = groupObj.getString("name");
             String description = meetupEvent.getString("description");
 
-            JSONObject venueObj = meetupEvent.getJSONObject("venue");
-            Venue venue = convertVenueObjToVenue(venueObj);
+            if (meetupEvent.has("venue")) {
+                JSONObject venueObj = meetupEvent.getJSONObject("venue");
+                Venue venue = convertVenueObjToVenue(venueObj);
 
-            return new ETEvent(title, startDate, endDate, organizer, description, venue);
+                return new ETEvent(title, startDate, endDate, organizer, description, venue);
+            }
+
+            return new ETEvent(title, startDate, endDate, organizer, description);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -65,6 +69,9 @@ public class MeetupResponseConverter {
     }
 
     private Object convertVenueToJsonObj(Venue venue) throws JSONException {
+        if (venue == null) {
+            return null;
+        }
         JSONObject venueObj = new JSONObject();
         venueObj.put("id", venue.getId());
         venueObj.put("name", venue.getName());
