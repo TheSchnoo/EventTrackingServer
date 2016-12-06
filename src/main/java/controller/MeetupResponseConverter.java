@@ -45,8 +45,8 @@ public class MeetupResponseConverter {
 
         int id = venueObj.getInt("id");
         String name = venueObj.getString("name");
-        float lat = Float.parseFloat(venueObj.getString("lat"));
-        float lon = Float.parseFloat(venueObj.getString("lon"));
+        float lat = (float) venueObj.getDouble("lat");
+        float lon = (float) venueObj.getDouble("lon");
         String address = venueObj.getString("address_1");
         String city = venueObj.getString("city");
         String country = venueObj.getString("country");

@@ -5,9 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -21,6 +19,8 @@ import java.util.List;
  * Apathetic spawn of Wesb on 11/11/16.
  */
 public class DatabaseController {
+
+    private static String MEEUTP_OPEN_EVENTS_URL = "https://api.meetup.com/2/open_events?";
 
     private Connection connection;
     private MeetupResponseConverter converter;
@@ -51,8 +51,10 @@ public class DatabaseController {
         }
     }
 
-    public JSONObject selectEvents() throws JSONException {
-        JSONArray eventsList = get("https://api.meetup.com/find/events?key=" + System.getenv("MEETUP_KEY"));
+    public JSONObject searchEvents(String zip, String text) throws JSONException {
+        String meetupUrl = MEEUTP_OPEN_EVENTS_URL + "key=" + System.getenv("MEETUP_KEY")
+                + "&zip=" + zip + "&text=" + text;
+        JSONArray eventsList = get(meetupUrl);
         ETEvent event = converter.convertMeetupEventToEvent((JSONObject) eventsList.get(0));
         return converter.ETEventToResponse(event);
     }
@@ -79,7 +81,8 @@ public class DatabaseController {
                 list.add(line);
             }
             rd.close();
-            JSONArray obj = new JSONArray(list.get(0));
+            JSONObject jsonObject = new JSONObject(list);
+            JSONArray obj = (JSONArray) jsonObject.get("results");
             return obj;
         } catch (Exception e) {
             e.printStackTrace();
