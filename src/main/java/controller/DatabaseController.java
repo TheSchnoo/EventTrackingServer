@@ -81,7 +81,7 @@ public class DatabaseController {
                 list.add(line);
             }
             rd.close();
-            JSONObject jsonObject = new JSONObject(list);
+            JSONObject jsonObject = new JSONObject(list.get(0));
             JSONArray obj = (JSONArray) jsonObject.get("results");
             return obj;
         } catch (Exception e) {
